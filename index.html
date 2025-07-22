@@ -1,89 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>System Breach Detected</title>
-  <style>
-    body {
-      background-color: black;
-      color: lime;
-      font-family: monospace;
-      padding: 20px;
-      text-align: center;
-    }
-    h1 {
-      color: red;
-      font-size: 32px;
-      margin-top: 30px;
-    }
-    #upload, #deviceInfo, #countdown {
-      margin-top: 30px;
-      font-size: 18px;
-      white-space: pre-line;
-    }
-    .glitch {
-      animation: glitch 0.3s infinite;
-    }
-    @keyframes glitch {
-      0% { transform: skewX(-10deg); }
-      25% { transform: skewX(10deg); }
-      50% { transform: skewX(-5deg); }
-      75% { transform: skewX(5deg); }
-      100% { transform: skewX(0); }
-    }
-  </style>
-</head>
-<body>
+<meta charset="UTF-8" />
+<title>Hacked Prank Locked</title>
+<style>
+  body {
+    background: black;
+    color: lime;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    padding-top: 50px;
+    margin: 0;
+    overflow: hidden;
+  }
+  #bar {
+    width: 80%;
+    background: #222;
+    margin: 20px auto;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  #progress {
+    height: 20px;
+    width: 0%;
+    background: lime;
+  }
+  #countdown {
+    margin-top: 20px;
+    font-size: 2rem;
+    color: red;
+    display: none;
+  }
+</style>
+<script>
+  // Block back navigation
+  history.pushState(null, null, location.href);
+  window.onpopstate = function () {
+    history.go(1);
+  };
 
-  <h1 class="glitch">🔒 SYSTEM BREACH DETECTED</h1>
-  <p id="deviceInfo">Scanning device info...</p>
-  <p id="upload">📤 Uploading data: 0%</p>
-  <p id="countdown"></p>
+  // Request fullscreen
+  function requestFullscreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  }
 
-  <script>
-    // Collect device info
-    const info = {
-      browser: navigator.appName,
-      userAgent: navigator.userAgent,
-      platform: navigator.platform,
-      language: navigator.language,
-      screenWidth: screen.width,
-      screenHeight: screen.height,
-      cookiesEnabled: navigator.cookieEnabled
-    };
+  function startPrank() {
+    requestFullscreen();
 
-    let infoText = `📡 Device Info Captured:\n`;
-    for (let key in info) {
-      infoText += `${key}: ${info[key]}\n`;
-    }
-    document.getElementById("deviceInfo").innerText = infoText;
+    alert("💀 YOU'VE BEEN HACKED 💀");
+    alert("Transferring your data now...");
+    let progress = 0;
+    const progressBar = document.getElementById('progress');
+    const transferText = document.getElementById('transfer');
+    const countdownEl = document.getElementById('countdown');
 
-    // Upload simulation
-    let percent = 0;
-    const uploadInterval = setInterval(() => {
-      percent++;
-      document.getElementById("upload").innerText = `📤 Uploading data: ${percent}%`;
-      if (percent >= 100) {
-        clearInterval(uploadInterval);
-        fakeCountdown();
+    const interval = setInterval(() => {
+      progress += Math.floor(Math.random() * 10) + 5;
+      if (progress > 100) progress = 100;
+      progressBar.style.width = progress + '%';
+      transferText.textContent = `Transferring your data... ${progress}%`;
+
+      if (progress === 100) {
+        clearInterval(interval);
+        alert("Data transfer complete. All your secrets are mine! 😈");
+        startCountdown();
       }
-    }, 60);
+    }, 500);
 
-    // Countdown to fake shutdown
-    function fakeCountdown() {
-      let seconds = 30;
-      const countdownEl = document.getElementById("countdown");
-      countdownEl.innerText = `⚠️ System shutting down in: ${seconds}s`;
-      const interval = setInterval(() => {
-        seconds--;
-        countdownEl.innerText = `⚠️ System shutting down in: ${seconds}s`;
-        if (seconds <= 0) {
-          clearInterval(interval);
-          countdownEl.innerText = `💥 Shutdown complete. Goodbye.`;
+    function startCountdown() {
+      let count = 120; // 2 minutes
+      countdownEl.style.display
+        = 'block';
+      transferText.style.display = 'none';
+      const countdownInterval = setInterval(() => {
+        countdownEl.textContent = `System shutting down in ${count} seconds...`;
+        count--;
+        if (count < 0) {
+          clearInterval(countdownInterval);
+          document.body.innerHTML = "<h1 style='color:red;'>System Shutdown Complete. Goodbye! 💀</h1>";
         }
       }, 1000);
     }
-  </script>
-
+  }
+</script>
+</head>
+<body onload="startPrank()">
+  <h1>System Breached!</h1>
+  <div id="bar"><div id="progress"></div></div>
+  <div id="transfer">Transferring your data... 0%</div>
+  <div id="countdown"></div>
 </body>
 </html>
